@@ -1,0 +1,86 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{cite}
+
+\title{\textbf{ELEC3305 Project Report}}
+\author{540704226 ,540705337, 530473303}
+\date{April 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Model \& Principles of Operation}
+
+Within our real time AIR SONAR System, we will be using the LFM signal, or more formally known as the chirp signal. The LFM is a type of frequency modulation in which the signal sweeps linearly from one frequency to another. LFM is created by concatenating small sequences, each with a higher frequency than the last.
+
+\vspace{1\baselineskip}
+
+\noindent The LFM chirp signal can be expressed as a complex analytical signal:
+\[
+s(t) = \exp\bigl(j 2\pi (f_0 + \frac{k}{2}t)t\bigr)
+\]
+The above will allow us to perform envelope detection and phase processing more easily.
+
+\vspace{1\baselineskip}
+
+\noindent In a practical environment, the receiver signal will have some interference or unintentional disturbances at all frequencies, known as Additive White Gaussian Noise (AWGN). We can classify such as $n(t)$. Thus, the receiver signal is expressed as:
+\[
+r(t) = s(t) + n(t)
+\]
+
+\vspace{1\baselineskip}
+
+\noindent The principle of operation that will be implemented in our real time SONAR is pulse compression through matched filtering. Pulse compression is a technique that is used to obtain fine-range resolution by transmitting a wide pulse to achieve large radiated energy and processing it to a narrow pulse. The transmitted pulse is called the expanded pulse, and the processed pulse is called the compressed pulse. The received signal undergoes processing using a matched filter. By convolving the incoming signal with a conjugated, time-reversed replica of a known signal, the matching filter then maximises SNR. At the precise instant of signal detection, the matching filter output produces a sharp, high-SNR peak that is equal to the autocorrelation of the transmitted signal.
+
+\vspace{1\baselineskip}
+
+\noindent In addition, the distance is inferred using the propagation time of the radio wave between the transmitter (computer) and the receiver/responder (object being detected). The time-of-flight (ToF) is given as the arrival time of the transmitted packet also known as time-of-arrival (ToA) minus the time-of-transmission (ToT) added by the initiator. The TOF \& TOA will give us the delay between transmitted pulse and the reflected echo ($\Delta t$).
+
+\vspace{1\baselineskip}
+
+\noindent Using the speed of sound ($V_s = 343ms^{-1}$), distance is calculated as:
+\[
+d = \frac{v_s \cdot \Delta t}{2}
+\]
+As the transmitted wave is also reflected, we divide by 2.
+
+\vspace{1\baselineskip}
+
+\noindent Finally, if there are weak signals buried in noise, we can implement cross-correlation in our SONAR system. Cross-correlation will help such that we can detect the signal by measuring the similarity between a transmitted signal and a received signal as a function of their relative delay.
+
+\section{Signal Optimisation}
+
+The optimisation of the SONAR signal centers on resolving the fundamental trade-off between energy detection and range resolution. 
+
+\vspace{1\baselineskip}
+
+\noindent In a simple pulsed system, high resolution requires a very short pulse duration ($T$), which significantly limits the total energy ($E$) the system can transmit into the environment, thereby reducing the maximum detectable range. To optimise this, we utilise a Linear Frequency Modulated (LFM) Chirp, which decouples the pulse duration from the bandwidth.By sweeping the frequency over a wide range ($B$), we optimise the Time-Bandwidth Product ($T \times B$). This allows the system to transmit a long, high-energy pulse that, upon processing through a matched filter, 'compresses' into a narrow time spike with a width of approximately $1/B$. 
+
+\vspace{1\baselineskip}
+
+\noindent Optimisation further involves the application of a tapering window (e.g., Hann or Hamming) to the chirp's amplitude envelope. This process is essential to suppress the spectral 'leakage' and the resulting temporal side-lobes in the compressed output, which could otherwise be mistaken for false targets. Ultimately, the signal is optimised to produce an Ambiguity Function with a narrow 'thumbtack' response, ensuring that the distance estimation is both robust against ambient noise and highly precise at the centimeter scale.
+
+\section{Pulse Compression Techniques to Improve Robustness}
+
+The effectiveness of air-based SONAR systems is limited by the physical constraints of audio hardware, as well as environmental interference. By implementing a matched filter, we can improve the robustness. Instead of increasing the peak amplitude, which would otherwise result in clipping in the laptop's digital-to-analog converter, we inject more overall energy into the environment by using an LFM chirp with a considerable duration ($T$). In addition, additive white gaussian noise can be suppressed using cross-correlation and can amplify the signal energy. More specifically, the gain defined as $G = 10 \log_{10}(T \times B)$, allows the system to remain functional at lower transmission volumes even in high-noise environments where the echo is visually indistinguishable in the raw time-domain signal.
+
+\vspace{1\baselineskip}
+
+\noindent Furthermore, we can improve system robustness by maxmimising the signal's bandwidth via range resolution. Enhancing the system's ability to distinguish peaks in closely spaced targets. The range resolution function of the transmitted waveform is inversely proportional to the signal bandwidth. The resolution can be expressed by:
+\[
+\Delta R = \frac{v}{2B}
+\]
+The main lobe of the signal's autocorrelation function is physically narrowed by increasing the bandwidth (for example, from $5$ kHz to $15$ kHz). This guarantees that the correlation peaks of two reflecting surfaces will stay distinct and resolvable even if they are only a few centimeters apart.
+
+\vspace{1\baselineskip}
+
+\noindent Lastly, Sidelobe Suppression is used to improve robustness. Smaller objects close to a primary target may be obscured by "ringing" or sidelobes in the autocorrelation of a raw LFM chirp. We add a windowing function, like a Hamming or Hann window, to the transmitted template to minimise this. By exchanging a small bit of resolution for a large decrease in false-alarm peaks, this tapering of the signal's amplitude envelope optimises the "Ambiguity Function" of the chirp. Because of this integrated approach, the system is guaranteed to offer a clear, consistent distance measurement that is resistant to both complicated acoustic multi-path reflections, which are typical in indoor situations, and electronic noise.
+
+\section{Implementation of Real-time Signal Processing}
+
+\section{References}
+
+\end{document}
