@@ -1,0 +1,271 @@
+21:40:57.258 [info] Restart requested ~/ELEC3305_f/SONAR_PROJECT/2026_sc1_elec3305_Sonar_project/dsp_Sonar_project/01_Sonar_Lab_Walkthrough.ipynb
+21:40:57.260 [warn] Cancel all remaining cells due to dead kernel
+21:40:59.076 [info] Process Execution: ~/anaconda3/envs/ELEC3305_conda/bin/python -c "import ipykernel; print(ipykernel.__version__); print("5dc3a68c-e34e-4080-9c3e-2a532b2ccb4d"); print(ipykernel.__file__)"
+21:40:59.089 [info] Process Execution: ~/anaconda3/envs/ELEC3305_conda/bin/python -m ipykernel_launcher --f=/run/user/1000/jupyter/runtime/kernel-v3dbba1442b591ced899cd92bb7240fc9efe5c8659.json
+    > cwd: ~/ELEC3305_f/SONAR_PROJECT/2026_sc1_elec3305_Sonar_project/dsp_Sonar_project
+21:41:00.072 [info] Restarted 06dea064-b80b-4fa2-b3d3-255a6b24e005
+21:41:00.191 [warn] Cell completed with errors [Iu [Error]: name 'sortOfASonar' is not defined
+	at n.execute (~/.vscode-server/extensions/ms-toolsai.jupyter-2025.9.1-linux-x64/dist/extension.node.js:302:4958)] {
+  ename: 'NameError',
+  evalue: "name 'sortOfASonar' is not defined",
+  traceback: [
+    '\x1B[31m---------------------------------------------------------------------------\x1B[39m',
+    '\x1B[31mNameError\x1B[39m                                 Traceback (most recent call last)',
+    '\x1B[36mCell\x1B[39m\x1B[36m \x1B[39m\x1B[32mIn[1]\x1B[39m\x1B[32m, line 8\x1B[39m\n' +
+      '\x1B[32m      4\x1B[39m fs = \x1B[32m48000\x1B[39m\n' +
+      '\x1B[32m      5\x1B[39m Nrep = \x1B[32m100\x1B[39m\n' +
+      '\x1B[32m      6\x1B[39m Nseg = \x1B[32m4800\x1B[39m\n' +
+      '\x1B[32m      7\x1B[39m \n' +
+      '\x1B[32m----> \x1B[39m\x1B[32m8\x1B[39m img = sortOfASonar(Npulse, f0, f1,fs, Nrep, Nseg)\n',
+    "\x1B[31mNameError\x1B[39m: name 'sortOfASonar' is not defined"
+  ]
+}
+21:42:40.691 [warn] Cell completed with errors [Iu [Error]: name 'genChirpPulse' is not defined
+	at n.execute (~/.vscode-server/extensions/ms-toolsai.jupyter-2025.9.1-linux-x64/dist/extension.node.js:302:4958)] {
+  ename: 'NameError',
+  evalue: "name 'genChirpPulse' is not defined",
+  traceback: [
+    '\x1B[31m---------------------------------------------------------------------------\x1B[39m',
+    '\x1B[31mNameError\x1B[39m                                 Traceback (most recent call last)',
+    '\x1B[36mCell\x1B[39m\x1B[36m \x1B[39m\x1B[32mIn[9]\x1B[39m\x1B[32m, line 8\x1B[39m\n' +
+      '\x1B[32m      4\x1B[39m fs = \x1B[32m48000\x1B[39m\n' +
+      '\x1B[32m      5\x1B[39m Nrep = \x1B[32m100\x1B[39m\n' +
+      '\x1B[32m      6\x1B[39m Nseg = \x1B[32m4800\x1B[39m\n' +
+      '\x1B[32m      7\x1B[39m \n' +
+      '\x1B[32m----> \x1B[39m\x1B[32m8\x1B[39m img = sortOfASonar(Npulse, f0, f1,fs, Nrep, Nseg)\n',
+    '\x1B[36mCell\x1B[39m\x1B[36m \x1B[39m\x1B[32mIn[8]\x1B[39m\x1B[32m, line 3\x1B[39m, in \x1B[36msortOfASonar\x1B[39m\x1B[34m(Npulse, f0, f1, fs, Nrep, Nseg)\x1B[39m\n' +
+      '\x1B[32m      1\x1B[39m \x1B[38;5;28;01mdef\x1B[39;00m sortOfASonar(Npulse, f0, f1, fs, Nrep, Nseg):\n' +
+      '\x1B[32m      2\x1B[39m     \x1B[38;5;66;03m# 1. Generate Pulse\x1B[39;00m\n' +
+      '\x1B[32m----> \x1B[39m\x1B[32m3\x1B[39m     pulse_a = genChirpPulse(Npulse, f0, f1, fs)\n' +
+      '\x1B[32m      4\x1B[39m     \x1B[38;5;66;03m# 2. Window (Crucial: Keep it 1D to avoid memory crash)\x1B[39;00m\n' +
+      '\x1B[32m      5\x1B[39m     pulse_a = pulse_a.flatten() * np.hanning(Npulse).flatten()\n' +
+      '\x1B[32m      6\x1B[39m     \x1B[38;5;66;03m# 3. Create Train\x1B[39;00m\n',
+    "\x1B[31mNameError\x1B[39m: name 'genChirpPulse' is not defined"
+  ]
+}
+21:43:46.204 [warn] Cell completed with errors [Iu [Error]: name 'time2dist' is not defined
+	at n.execute (~/.vscode-server/extensions/ms-toolsai.jupyter-2025.9.1-linux-x64/dist/extension.node.js:302:4958)] {
+  ename: 'NameError',
+  evalue: "name 'time2dist' is not defined",
+  traceback: [
+    '\x1B[31m---------------------------------------------------------------------------\x1B[39m',
+    '\x1B[31mNameError\x1B[39m                                 Traceback (most recent call last)',
+    '\x1B[36mCell\x1B[39m\x1B[36m \x1B[39m\x1B[32mIn[13]\x1B[39m\x1B[32m, line 8\x1B[39m\n' +
+      '\x1B[32m      4\x1B[39m \x1B[38;5;66;03m# display up to 2.5m approximately 700 samples at 21 degrees C in 48000 sampling rate\x1B[39;00m\n' +
+      '\x1B[32m      5\x1B[39m \n' +
+      '\x1B[32m      6\x1B[39m vmax = \x1B[32m0.3\x1B[39m \x1B[38;5;66;03m# threshold -- lower will be able to see smaller echos\x1B[39;00m\n' +
+      '\x1B[32m      7\x1B[39m \n' +
+      "\x1B[32m----> \x1B[39m\x1B[32m8\x1B[39m plt.imshow(img[:,\x1B[32m0\x1B[39m:\x1B[32m700\x1B[39m]/max(img.ravel()),vmax=vmax, aspect=\x1B[32m10\x1B[39m,cmap=\x1B[33m'gray'\x1B[39m,interpolation=\x1B[33m'bilinear'\x1B[39m,extent=(\x1B[32m0\x1B[39m,time2dist(\x1B[32m700\x1B[39m/\x1B[32m48000\x1B[39m),Nrep*Nseg/fs,\x1B[32m0\x1B[39m))\n" +
+      "\x1B[32m      9\x1B[39m plt.xlabel(\x1B[33m'cm'\x1B[39m)\n" +
+      "\x1B[32m     10\x1B[39m plt.ylabel(\x1B[33m'sec'\x1B[39m)\n",
+    "\x1B[31mNameError\x1B[39m: name 'time2dist' is not defined"
+  ]
+}
+21:44:36.536 [warn] Cell completed with errors [Iu [Error]: name 'time2dist' is not defined
+	at n.execute (~/.vscode-server/extensions/ms-toolsai.jupyter-2025.9.1-linux-x64/dist/extension.node.js:302:4958)] {
+  ename: 'NameError',
+  evalue: "name 'time2dist' is not defined",
+  traceback: [
+    '\x1B[31m---------------------------------------------------------------------------\x1B[39m',
+    '\x1B[31mNameError\x1B[39m                                 Traceback (most recent call last)',
+    '\x1B[36mCell\x1B[39m\x1B[36m \x1B[39m\x1B[32mIn[14]\x1B[39m\x1B[32m, line 8\x1B[39m\n' +
+      '\x1B[32m      4\x1B[39m \x1B[38;5;66;03m# display up to 2.5m approximately 700 samples at 21 degrees C in 48000 sampling rate\x1B[39;00m\n' +
+      '\x1B[32m      5\x1B[39m \n' +
+      '\x1B[32m      6\x1B[39m vmax = \x1B[32m0.3\x1B[39m \x1B[38;5;66;03m# threshold -- lower will be able to see smaller echos\x1B[39;00m\n' +
+      '\x1B[32m      7\x1B[39m \n' +
+      "\x1B[32m----> \x1B[39m\x1B[32m8\x1B[39m plt.imshow(img[:,\x1B[32m0\x1B[39m:\x1B[32m700\x1B[39m]/max(img.ravel()),vmax=vmax, aspect=\x1B[32m10\x1B[39m,cmap=\x1B[33m'gray'\x1B[39m,interpolation=\x1B[33m'bilinear'\x1B[39m,extent=(\x1B[32m0\x1B[39m,time2dist(\x1B[32m700\x1B[39m/\x1B[32m48000\x1B[39m),Nrep*Nseg/fs,\x1B[32m0\x1B[39m))\n" +
+      "\x1B[32m      9\x1B[39m plt.xlabel(\x1B[33m'cm'\x1B[39m)\n" +
+      "\x1B[32m     10\x1B[39m plt.ylabel(\x1B[33m'sec'\x1B[39m)\n",
+    "\x1B[31mNameError\x1B[39m: name 'time2dist' is not defined"
+  ]
+}
+21:45:28.756 [warn] Cell completed with errors [Iu [Error]: name 'time2dist' is not defined
+	at n.execute (~/.vscode-server/extensions/ms-toolsai.jupyter-2025.9.1-linux-x64/dist/extension.node.js:302:4958)] {
+  ename: 'NameError',
+  evalue: "name 'time2dist' is not defined",
+  traceback: [
+    '\x1B[31m---------------------------------------------------------------------------\x1B[39m',
+    '\x1B[31mNameError\x1B[39m                                 Traceback (most recent call last)',
+    '\x1B[36mCell\x1B[39m\x1B[36m \x1B[39m\x1B[32mIn[15]\x1B[39m\x1B[32m, line 8\x1B[39m\n' +
+      '\x1B[32m      4\x1B[39m \x1B[38;5;66;03m# display up to 2.5m approximately 700 samples at 21 degrees C in 48000 sampling rate\x1B[39;00m\n' +
+      '\x1B[32m      5\x1B[39m \n' +
+      '\x1B[32m      6\x1B[39m vmax = \x1B[32m0.3\x1B[39m \x1B[38;5;66;03m# threshold -- lower will be able to see smaller echos\x1B[39;00m\n' +
+      '\x1B[32m      7\x1B[39m \n' +
+      "\x1B[32m----> \x1B[39m\x1B[32m8\x1B[39m plt.imshow(img[:,\x1B[32m0\x1B[39m:\x1B[32m700\x1B[39m]/max(img.ravel()),vmax=vmax, aspect=\x1B[32m10\x1B[39m,cmap=\x1B[33m'gray'\x1B[39m,interpolation=\x1B[33m'bilinear'\x1B[39m,extent=(\x1B[32m0\x1B[39m,time2dist(\x1B[32m700\x1B[39m/\x1B[32m48000\x1B[39m),Nrep*Nseg/fs,\x1B[32m0\x1B[39m))\n" +
+      "\x1B[32m      9\x1B[39m plt.xlabel(\x1B[33m'cm'\x1B[39m)\n" +
+      "\x1B[32m     10\x1B[39m plt.ylabel(\x1B[33m'sec'\x1B[39m)\n",
+    "\x1B[31mNameError\x1B[39m: name 'time2dist' is not defined"
+  ]
+}
+21:46:25.122 [error] Disposing session as kernel process died ExitCode: undefined, Reason: ALSA lib confmisc.c:855:(parse_card) [error.core] cannot find card '0'
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) [error.core] error evaluating strings
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) [error.core] error evaluating name
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5730:(snd_config_expand) [error.core] Evaluate error: No such file or directory
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM sysdefault
+ALSA lib confmisc.c:855:(parse_card) [error.core] cannot find card '0'
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) [error.core] error evaluating strings
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) [error.core] error evaluating name
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5730:(snd_config_expand) [error.core] Evaluate error: No such file or directory
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM sysdefault
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.front
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.side
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.surround21
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.surround21
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.surround40
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.surround41
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.surround50
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.surround51
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.surround71
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.iec958
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.iec958
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.iec958
+ALSA lib confmisc.c:855:(parse_card) [error.core] cannot find card '0'
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) [error.core] error evaluating strings
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) [error.core] error evaluating name
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5730:(snd_config_expand) [error.core] Evaluate error: No such file or directory
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM hdmi
+ALSA lib confmisc.c:855:(parse_card) [error.core] cannot find card '0'
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) [error.core] error evaluating strings
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) [error.core] error evaluating name
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5730:(snd_config_expand) [error.core] Evaluate error: No such file or directory
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM hdmi
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.modem
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.modem
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.phoneline
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.phoneline
+ALSA lib confmisc.c:165:(snd_config_get_card) [error.core] Cannot get card index for 0
+ALSA lib confmisc.c:165:(snd_config_get_card) [error.core] Cannot get card index for 0
+ALSA lib confmisc.c:165:(snd_config_get_card) [error.core] Cannot get card index for 0
+ALSA lib confmisc.c:165:(snd_config_get_card) [error.core] Cannot get card index for 0
+ALSA lib confmisc.c:165:(snd_config_get_card) [error.core] Cannot get card index for 0
+ALSA lib confmisc.c:165:(snd_config_get_card) [error.core] Cannot get card index for 0
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_<username>.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_<username>.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_<username>.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_<username>.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_oss.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_oss.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_oss.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_oss.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_a52.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_a52.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_a52.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_a52.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_speex.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_speex.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_speex.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_speex.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_upmix.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_upmix.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_upmix.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_upmix.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_vdownmix.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_vdownmix.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_vdownmix.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_vdownmix.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_usb_stream.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_usb_stream.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_usb_stream.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_usb_stream.so: cannot open shared object file: No such file or directory)
+ALSA lib confmisc.c:855:(parse_card) [error.core] cannot find card '0'
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_card_id returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) [error.core] error evaluating strings
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) [error.core] error evaluating name
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5730:(snd_config_expand) [error.core] Evaluate error: No such file or directory
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM dmix
+ALSA lib pcm.c:8787:(snd_pcm_recover) [error.pcm] underrun occurred
+ALSA lib confmisc.c:855:(parse_card) [error.core] cannot find card '0'
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) [error.core] error evaluating strings
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) [error.core] error evaluating name
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5730:(snd_config_expand) [error.core] Evaluate error: No such file or directory
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM sysdefault
+ALSA lib confmisc.c:855:(parse_card) [error.core] cannot find card '0'
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) [error.core] error evaluating strings
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) [error.core] error evaluating name
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5730:(snd_config_expand) [error.core] Evaluate error: No such file or directory
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM sysdefault
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.front
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.side
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.surround21
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.surround21
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.surround40
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.surround41
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.surround50
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.surround51
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.surround71
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.iec958
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.iec958
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.iec958
+ALSA lib confmisc.c:855:(parse_card) [error.core] cannot find card '0'
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) [error.core] error evaluating strings
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) [error.core] error evaluating name
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5730:(snd_config_expand) [error.core] Evaluate error: No such file or directory
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM hdmi
+ALSA lib confmisc.c:855:(parse_card) [error.core] cannot find card '0'
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) [error.core] error evaluating strings
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) [error.core] error evaluating name
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5730:(snd_config_expand) [error.core] Evaluate error: No such file or directory
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM hdmi
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.modem
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.modem
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.phoneline
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM cards.pcm.phoneline
+ALSA lib confmisc.c:165:(snd_config_get_card) [error.core] Cannot get card index for 0
+ALSA lib confmisc.c:165:(snd_config_get_card) [error.core] Cannot get card index for 0
+ALSA lib confmisc.c:165:(snd_config_get_card) [error.core] Cannot get card index for 0
+ALSA lib confmisc.c:165:(snd_config_get_card) [error.core] Cannot get card index for 0
+ALSA lib confmisc.c:165:(snd_config_get_card) [error.core] Cannot get card index for 0
+ALSA lib confmisc.c:165:(snd_config_get_card) [error.core] Cannot get card index for 0
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_<username>.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_<username>.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_<username>.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_<username>.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_oss.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_oss.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_oss.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_oss.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_a52.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_a52.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_a52.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_a52.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_speex.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_speex.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_speex.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_speex.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_upmix.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_upmix.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_upmix.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_upmix.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_vdownmix.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_vdownmix.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_vdownmix.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_vdownmix.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_usb_stream.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_usb_stream.so: cannot open shared object file: No such file or directory)
+ALSA lib dlmisc.c:339:(snd_dlobj_cache_get0) [error.core] Cannot open shared library libasound_module_pcm_usb_stream.so (~/anaconda3/envs/ELEC3305_conda/lib/python3.11/site-packages/pyaudio/../../.././alsa-lib/libasound_module_pcm_usb_stream.so: cannot open shared object file: No such file or directory)
+ALSA lib confmisc.c:855:(parse_card) [error.core] cannot find card '0'
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_card_id returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) [error.core] error evaluating strings
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) [error.core] error evaluating name
+ALSA lib conf.c:5207:(_snd_config_evaluate) [error.core] function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5730:(snd_config_expand) [error.core] Evaluate error: No such file or directory
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM dmix
+ALSA lib pcm.c:8787:(snd_pcm_recover) [error.pcm] underrun occurred
+ALSA lib pcm.c:8787:(snd_pcm_recover) [error.pcm] underrun occurred
+ALSA lib pcm.c:8787:(snd_pcm_recover) [error.pcm] underrun occurred
+ALSA lib pcm.c:8787:(snd_pcm_recover) [error.pcm] underrun occurred
+ALSA lib pcm.c:8787:(snd_pcm_recover) [error.pcm] underrun occurred
+ALSA lib pcm.c:8787:(snd_pcm_recover) [error.pcm] underrun occurred
+ALSA lib pcm.c:8787:(snd_pcm_recover) [error.pcm] underrun occurred
+ALSA lib pcm.c:8787:(snd_pcm_recover) [error.pcm] underrun occurred
+ALSA lib pcm.c:8787:(snd_pcm_recover) [error.pcm] underrun occurred
+ALSA lib pcm.c:8787:(snd_pcm_recover) [error.pcm] underrun occurred
+ALSA lib pcm.c:8787:(snd_pcm_recover) [error.pcm] underrun occurred
+Expression 'res' failed in '/home/conda/feedstock_root/build_artifacts/portaudio_1730363929490/work/src/hostapi/alsa/pa_linux_alsa.c', line: 3506
+Expression 'PaAlsaStreamComponent_EndProcessing( &self->playback, numFrames, &xrun )' failed in '/home/conda/feedstock_root/build_artifacts/portaudio_1730363929490/work/src/hostapi/alsa/pa_linux_alsa.c', line: 3605
+Expression 'PaAlsaStream_EndProcessing( stream, framesGot, &xrun )' failed in '/home/conda/feedstock_root/build_artifacts/portaudio_1730363929490/work/src/hostapi/alsa/pa_linux_alsa.c', line: 4499
+
