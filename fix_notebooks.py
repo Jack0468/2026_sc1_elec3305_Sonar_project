@@ -1,5 +1,4 @@
 import json
-import numpy as np
 
 def fix_sonar_new(filename):
     with open(filename, 'r') as f:
@@ -245,10 +244,12 @@ def fix_realtime(filename):
             source = ''.join(cell.get('source', []))
             if 'def genChirpPulse(' in source and 'def genPulseTrain(' in source and 'def dist2time(' in source:
                 cell['source'] = [
+                    "import numpy as np\n",
+                    "from scipy import signal\n",
+                    "\n",
                     "# Copy and paste your 5 functions here:\n",
                     "# genChirpPulse()\n",
                     "def genChirpPulse(Npulse, f0, f1, fs):\n",
-                    "    import numpy as np\n",
                     "    t = np.arange(Npulse) / fs\n",
                     "    k = (f1 - f0) / (Npulse / fs)\n",
                     "    phi_of_t = 2 * np.pi * (f0 * t + 0.5 * k * t**2)\n",
@@ -257,7 +258,6 @@ def fix_realtime(filename):
                     "\n",
                     "# genPulseTrain()\n",
                     "def genPulseTrain(pulse, Nrep, Nseg):\n",
-                    "    import numpy as np\n",
                     "    train = np.zeros(Nrep * Nseg, dtype=complex)\n",
                     "    for i in range(Nrep):\n",
                     "        train[i*Nseg : i*Nseg + len(pulse)] = pulse\n",
@@ -265,20 +265,16 @@ def fix_realtime(filename):
                     "\n",
                     "# crossCorr()\n",
                     "def crossCorr( rcv, pulse_a ):\n",
-                    "    from scipy import signal\n",
-                    "    import numpy as np\n",
                     "    Xrcv = signal.fftconvolve(rcv, pulse_a[::-1].conj(), mode='valid')\n",
                     "    return Xrcv\n",
                     "\n",
                     "# findDelay()\n",
                     "def findDelay(Xrcv, Nseg):\n",
-                    "    import numpy as np\n",
                     "    idx = np.argmax(np.abs(Xrcv[:Nseg]))\n",
                     "    return idx\n",
                     "\n",
                     "# dist2time()\n",
                     "def dist2time( dist, temperature=21):\n",
-                    "    import numpy as np\n",
                     "    v_s = 331.3 * np.sqrt(1 + temperature / 273.15)\n",
                     "    t = 2 * (dist / 100) / v_s\n",
                     "    return t\n"
