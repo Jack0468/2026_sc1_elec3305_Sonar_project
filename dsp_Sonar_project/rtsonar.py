@@ -37,7 +37,7 @@ def play_audio(Qout, ostream, stop_flag):
         if isinstance(data, str) and data == "EOT":
             break
         try:
-            ostream.write(data.astype(np.float32).tobytes())
+            ostream.write(data.astype(np.float32).tobytes(), exception_on_underflow=False)
         except Exception as e:
             print(f"[play] write error: {e}", flush=True)
             break
@@ -184,7 +184,7 @@ def rtsonar(f0, f1, fs, Npulse, Nseg, Nrep, Nplot, maxdist, temperature, functio
     print("[init] input stream open", flush=True)
     print(f"[init] opening output stream (device={out_dev})...", flush=True)
     ostream = p.open(format=pyaudio.paFloat32, channels=1, rate=int(fs),
-                     output=True, output_device_index=out_dev)
+                     output=True, output_device_index=out_dev, frames_per_buffer=chunk)
     print("[init] output stream open", flush=True)
 
     img = np.zeros((Nrep, Nplot), dtype=np.uint32)

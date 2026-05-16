@@ -13,14 +13,14 @@ from threading import Lock
 # Fixes ALSA "underrun occurred" and Core Dump crashes by closing streams safely
 # ==============================================================================
 def play_audio(Q, p, fs, dev=None):
-    ostream = p.open(format=pyaudio.paFloat32, channels=1, rate=int(fs), output=True, output_device_index=dev)
+    ostream = p.open(format=pyaudio.paFloat32, channels=1, rate=int(fs), output=True, output_device_index=dev, frames_per_buffer=2048)
     
     while True:
         data = Q.get()
         if isinstance(data, str) and data == "EOT":
             break
         try:
-            ostream.write(data.astype(np.float32).tobytes())
+            ostream.write(data.astype(np.float32).tobytes(), exception_on_underflow=False)
         except:
             break
             
@@ -106,18 +106,27 @@ def sortOfASonar(Npulse, f0, f1,fs, Nrep, Nseg):
     pulse = np.real(pulse_a)
     
     ptrain = genPulseTrain(pulse, Nrep, Nseg)
-    rcv = xciever(ptrain/2.0 , fs) 
+    rcv = xciever(np.real(ptrain)/2.0 , fs) 
     Xrcv_a = abs( crossCorr(rcv, pulse_a) )
     Xrcv_a = np.reshape(Xrcv_a, (1,len(Xrcv_a)))
     
     idx = findDelay(Xrcv_a,Nseg) 
     img = np.zeros((Nrep,Nseg))
-    img[0,:] = Xrcv_a[0,idx:idx+Nseg]
+    
+    max_len = Xrcv_a.shape[1]
+    end_idx = min(idx + Nseg, max_len)
+    img[0, :end_idx-idx] = Xrcv_a[0, idx:end_idx]
     
     # Look for peak in each pulse in the pulse train to avoid drift
     for n in range(1,Nrep):
-       idxx = findDelay(Xrcv_a[0,idx+int(Nseg/2):idx+int(Nseg/2)+Nseg],Nseg)
-       idx = idx + idxx + int(Nseg/2)
-       img[n,:]=Xrcv_a[0,idx:idx+Nseg]
+       search_start = idx + int(Nseg/2)
+       if search_start >= max_len:
+           break
+       search_end = min(search_start + Nseg, max_len)
+       idxx = findDelay(Xrcv_a[0, search_start:search_end], Nseg)
+       idx = search_start + idxx
+       end_idx = min(idx + Nseg, max_len)
+       if end_idx > idx:
+           img[n, :end_idx-idx] = Xrcv_a[0, idx:end_idx]
         
     return img
