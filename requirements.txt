@@ -3,5 +3,4 @@ scipy
 matplotlib
 pyaudio
 bokeh
-ipywidgets
-IPython
+jupyter
