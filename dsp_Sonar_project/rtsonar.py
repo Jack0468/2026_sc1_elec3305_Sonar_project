@@ -9,14 +9,8 @@ import bokeh.plotting as bk
 from bokeh.resources import INLINE
 from bokeh.models import GlyphRenderer
 from bokeh.io import push_notebook, output_notebook
-from IPython.display import clear_output, display
+from IPython.display import clear_output
 import sys
-
-try:
-    from jupyter_bokeh import BokehModel
-    HAVE_JUPYTER_BOKEH = True
-except ImportError:
-    HAVE_JUPYTER_BOKEH = False
 
 # Load BokehJS once at import time
 output_notebook(INLINE, hide_banner=True)
@@ -41,8 +35,12 @@ def play_audio(Qout, ostream, stop_flag):
         except Exception as e:
             print(f"[play] write error: {e}", flush=True)
             break
-    ostream.stop_stream()
-    ostream.close()
+            
+    try:
+        ostream.stop_stream()
+        ostream.close()
+    except Exception as e:
+        print(f"[play] stream cleanup error (ignoring): {e}", flush=True)
 
 
 def record_audio(Qin, istream, stop_flag, chunk=2048):
@@ -69,8 +67,13 @@ def record_audio(Qin, istream, stop_flag, chunk=2048):
             peak_since = 0.0
 
         Qin.put(data_flt)
-    istream.stop_stream()
-    istream.close()
+        
+    try:
+        istream.stop_stream()
+        istream.close()
+    except Exception as e:
+        print(f"[rec] stream cleanup error (ignoring): {e}", flush=True)
+        
     Qin.put("EOT")
     print("[rec] recorder stopped", flush=True)
 
@@ -95,8 +98,8 @@ def signal_process(Qin, Qdata, pulse_a, Nseg, Nplot, fs, maxdist, temperature, f
 
         try:
             Xrcv[cur_idx:(cur_idx + len(chunk) + len(pulse_a) - 1)] += Xchunk[0, :]
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"[signal] overlap-add error: {e}", flush=True)
 
         cur_idx += len(chunk)
 
@@ -142,9 +145,6 @@ def image_update(Qdata, fig, Nrep, Nplot, stop_flag, handle):
         view = img.view(dtype=np.uint8).reshape((Nrep, Nplot, 4))
         view[0, :, :] = cm.jet(new_line) * 255
 
-        # jupyter_bokeh's BokehModel auto-syncs via ipywidgets comm — no
-        # push_notebook needed (and it doesn't work in VS Code anyway).
-        # The classic bk.show + notebook_handle path still needs it.
         source.data['image'] = [img]
         if handle is not None:
             try:
@@ -155,8 +155,9 @@ def image_update(Qdata, fig, Nrep, Nplot, stop_flag, handle):
         with Qdata.mutex:
             Qdata.queue.clear()
 
-
-def rtsonar(f0, f1, fs, Npulse, Nseg, Nrep, Nplot, maxdist, temperature, functions, in_dev=None, out_dev=None):
+## note that in_dev and out_dev are device indices for pyaudio, not necessarily the same as sounddevice. 
+# Check with p.get_device_info_by_index() to find the right ones for your system.
+def rtsonar(f0, f1, fs, Npulse, Nseg, Nrep, Nplot, maxdist, temperature, functions, in_dev=1, out_dev=1):
     clear_output()
     output_notebook(INLINE, hide_banner=True)
 
@@ -196,16 +197,8 @@ def rtsonar(f0, f1, fs, Npulse, Nseg, Nrep, Nplot, maxdist, temperature, functio
                     height=400, width=800)
     fig.image_rgba(image=[img], x=[0], y=[0], dw=[maxdist], dh=[Nrep * Nseg / fs], name='echos')
 
-    # Render via jupyter_bokeh's BokehModel ipywidget when available — this
-    # works in VS Code (which doesn't forward Bokeh's native comm protocol).
-    # Fall back to classic bk.show with a notebook_handle for plain Jupyter.
-    if HAVE_JUPYTER_BOKEH:
-        print("[init] rendering via jupyter_bokeh.BokehModel (VS Code-compatible)", flush=True)
-        display(BokehModel(fig))
-        handle = None
-    else:
-        print("[init] rendering via classic bk.show + push_notebook", flush=True)
-        handle = bk.show(fig, notebook_handle=True)
+    print("[init] rendering via classic bk.show + push_notebook", flush=True)
+    handle = bk.show(fig, notebook_handle=True)
 
     stop_flag = threading.Event()
 
