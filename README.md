@@ -22,6 +22,9 @@ You will mainly be using the **`TimeDomain-RealTime-Sonar.ipynb`** notebook, whi
 2. **Environment:** A quiet room is best. Hard, flat surfaces (like a wall or a whiteboard) reflect sound the best. Soft materials (like pillows or blankets) absorb sound and won't show up well.
 3. **Disable Audio Enhancements:** This is critical. Modern OSs (Windows/macOS) apply noise cancellation and echo suppression to microphones. You *must* disable these "enhancements" in your system sound settings, otherwise, the OS will actively delete the sonar echoes before Python even sees them.
 
+conda create --name sonar_env --file requirements.txt
+conda install --file requirements.txt
+
 ### Running the Live Sonar
 
 1. **Open the Notebook:** Open `dsp_Sonar_project/TimeDomain-RealTime-Sonar.ipynb` in Jupyter Notebook or JupyterLab.
