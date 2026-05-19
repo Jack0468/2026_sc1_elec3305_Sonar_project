@@ -158,15 +158,21 @@ function drawWaterfall(frame) {
 
 function drawWaterfallTicks(W, H) {
   const maxdist = parseFloat(document.getElementById('paramMaxdist').value) || 200;
-  wfCtx.fillStyle = 'rgba(0, 255, 65, 0.5)';
-  wfCtx.font = '10px "Share Tech Mono"';
+  wfCtx.font = 'bold 14px "Orbitron", monospace';
+  wfCtx.fillStyle = 'rgba(255, 255, 255, 0.85)';
   wfCtx.textAlign = 'center';
   for (let i = 0; i <= 4; i++) {
     const x = Math.floor(W * i / 4);
     const label = Math.round(maxdist * i / 4);
-    wfCtx.fillText(label + '', x, H - 4);
-    // Small tick line
-    wfCtx.fillRect(x, H - 16, 1, 4);
+    // Drop shadow for contrast against waterfall colours
+    wfCtx.shadowColor = 'rgba(0,0,0,0.9)';
+    wfCtx.shadowBlur = 4;
+    wfCtx.fillText(label + '', x, H - 6);
+    wfCtx.shadowBlur = 0;
+    // Tick line
+    wfCtx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    wfCtx.fillRect(x - 0.5, H - 20, 1, 5);
+    wfCtx.fillStyle = 'rgba(255, 255, 255, 0.85)';
   }
 }
 
@@ -181,22 +187,32 @@ function drawMatchedFilter(frame) {
 
   // Axis ticks
   const maxdist = parseFloat(document.getElementById('paramMaxdist').value) || 200;
-  mfCtx.fillStyle = 'rgba(0, 255, 65, 0.5)';
-  mfCtx.font = '10px "Share Tech Mono"';
+
+  // Main trace X ticks
+  mfCtx.font = 'bold 14px "Orbitron", monospace';
+  mfCtx.fillStyle = 'rgba(0, 255, 65, 0.85)';
   mfCtx.textAlign = 'center';
   for (let i = 0; i <= 4; i++) {
     const x = Math.floor(W * i / 4);
     const label = Math.round(maxdist * i / 4);
+    mfCtx.shadowColor = 'rgba(0,0,0,0.8)';
+    mfCtx.shadowBlur = 3;
     mfCtx.fillText(label + '', x, H - 4);
-    mfCtx.fillRect(x, H - 16, 1, 4);
+    mfCtx.shadowBlur = 0;
+    mfCtx.fillRect(x, H - 18, 1, 4);
   }
 
   // Amplitude labels
+  mfCtx.font = 'bold 13px "Orbitron", monospace';
   mfCtx.textAlign = 'right';
+  mfCtx.fillStyle = 'rgba(0, 255, 65, 0.85)';
   for (let i = 0; i <= 4; i++) {
     const y = Math.floor(H - (H * i / 4));
-    const label = (i / 4).toFixed(1);
-    mfCtx.fillText(label, 28, y + 3);
+    const label = (i / 4).toFixed(2);
+    mfCtx.shadowColor = 'rgba(0,0,0,0.8)';
+    mfCtx.shadowBlur = 3;
+    mfCtx.fillText(label, 36, y - 3);
+    mfCtx.shadowBlur = 0;
   }
 
   // Glow effect — draw a thicker dimmer line behind
@@ -342,13 +358,35 @@ function gatherParams() {
 }
 
 function applyCalibration(result) {
-  if (result.f0)     document.getElementById('paramF0').value      = result.f0;
-  if (result.f1)     document.getElementById('paramF1').value      = result.f1;
-  if (result.Npulse) document.getElementById('paramNpulse').value  = result.Npulse;
-  if (result.Nseg)   document.getElementById('paramNseg').value    = result.Nseg;
-  if (result.Nrep)   document.getElementById('paramNrep').value    = result.Nrep;
-  if (result.maxdist)    document.getElementById('paramMaxdist').value = result.maxdist;
-  if (result.temperature) document.getElementById('paramTemp').value   = result.temperature;
+  // Map of result key → element ID
+  const fields = [
+    ['f0',          'paramF0'],
+    ['f1',          'paramF1'],
+    ['Npulse',      'paramNpulse'],
+    ['Nseg',        'paramNseg'],
+    ['Nrep',        'paramNrep'],
+    ['maxdist',     'paramMaxdist'],
+    ['temperature', 'paramTemp'],
+  ];
+
+  for (const [key, elId] of fields) {
+    if (result[key] !== undefined && result[key] !== null) {
+      const el = document.getElementById(elId);
+      if (!el) continue;
+      const oldVal = el.value;
+      el.value = result[key];
+      // Flash amber if value changed
+      if (String(result[key]) !== String(oldVal)) {
+        el.style.transition = 'background 0.15s ease, color 0.15s ease';
+        el.style.background = 'rgba(255,176,0,0.25)';
+        el.style.color = '#ffb000';
+        setTimeout(() => {
+          el.style.background = '';
+          el.style.color = '';
+        }, 800);
+      }
+    }
+  }
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────

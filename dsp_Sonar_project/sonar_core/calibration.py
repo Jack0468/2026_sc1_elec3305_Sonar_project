@@ -116,6 +116,11 @@ def _measure_frequency_response(fs: float, input_dev=None, output_dev=None):
     Play a wideband chirp (1 kHz → 22 kHz) and return the magnitude
     frequency response of the speaker→microphone path.
 
+    A wideband sweep is used so that all candidate frequency bands can be
+    scored, matching the approach from the Lab Walkthrough notebook which
+    uses signal.freqz on the received wideband chirp to identify the best
+    operating band.
+
     Returns (freqs, magnitude).
     """
     T = 2.0  # seconds
@@ -130,7 +135,8 @@ def _measure_frequency_response(fs: float, input_dev=None, output_dev=None):
     if len(rcv) == 0:
         return np.array([]), np.array([])
 
-    freqs, mag = sp_signal.freqz(rcv, 1, worN=4096, fs=fs)
+    # Use freqz on the received signal (matches Lab Walkthrough approach)
+    freqs, mag = sp_signal.freqz(rcv, 1, worN=8192, fs=fs)
     return freqs, np.abs(mag)
 
 
@@ -138,6 +144,12 @@ def _score_params(fs, f0, f1, Npulse, rcv_response, freqs_resp):
     """
     Estimate a rough SNR score for a given parameter set based on the
     measured frequency response.  Higher is better.
+
+    Score = band_energy * matched_filter_gain
+      - band_energy: mean squared magnitude in the [f0, f1] band
+        (captures how much speaker-mic response exists in this band)
+      - mf_gain: sqrt(Npulse * BW / fs) — longer pulses and wider
+        bandwidths both increase matched-filter SNR gain
     """
     # Energy of the response in the [f0, f1] band
     mask = (freqs_resp >= f0) & (freqs_resp <= f1)
@@ -186,9 +198,9 @@ def calibrate(input_dev=None, output_dev=None, fs: float = 48000,
     _log("  SONAR CALIBRATION")
     _log("=" * 60)
 
-    # Step 1 ─ measure frequency response
+    # Step 1 ─ measure frequency response with a wideband sweep
     _log("\n[Step 1/4] Measuring speaker‑mic frequency response …")
-    _log("  (a chirp will play — keep the environment quiet)")
+    _log("  (a 1–22 kHz chirp will play — keep the environment quiet)")
     time.sleep(1)
     freqs, mag = _measure_frequency_response(fs, input_dev, output_dev)
 
@@ -198,9 +210,11 @@ def calibrate(input_dev=None, output_dev=None, fs: float = 48000,
 
     _log(f"  Measured {len(freqs)} frequency bins.")
 
-    # Step 2 ─ find best frequency band
+    # Step 2 ─ find best frequency band by scoring all candidates
     _log("\n[Step 2/4] Identifying best frequency band …")
 
+    # Candidate bands span the audible range so we can select the best
+    # one based on the actual speaker-mic response
     candidates = [
         (4000, 8000),
         (6000, 12000),
@@ -257,6 +271,7 @@ def calibrate(input_dev=None, output_dev=None, fs: float = 48000,
         _log(f"    {k}: {v}")
     _log("\nCalibration complete.")
     return result
+
 
 
 # ── CLI entry‑point ──────────────────────────────────────────────────────
