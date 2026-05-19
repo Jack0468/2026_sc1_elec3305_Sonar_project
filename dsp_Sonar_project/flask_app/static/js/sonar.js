@@ -10,7 +10,67 @@
  *  - UI state management and parameter controls
  */
 
-// ── Globals ──────────────────────────────────────────────────────────────
+// ── Preset parameter sets ────────────────────────────────────────────────
+//
+// Physics notes (fs=48000, v_sound≈343 m/s at 21°C):
+//   maxsamp = round(2 * maxdist_m / v * fs)
+//   Nseg must be > Npulse + maxsamp
+//   Longer Npulse → more energy, better SNR, coarser range resolution
+//   Wider BW (f1-f0) → finer range resolution
+//   Higher Nrep → more averaging, slower waterfall
+//
+// Set 1 — General all-round. Desk objects, 20–200 cm.  Npulse=500 (10 ms)
+// Set 2 — Close range / fast motion. 15–100 cm.  Wide BW, short pulse.
+// Set 3 — Across a room, 20–350 cm.  Lower freq band, long pulse.
+// Set 4 — Noisy environments. Same band as Set 1 but 2× pulse → better SNR.
+
+const PRESETS = {
+  '1': {
+    f0: 6000, f1: 12000, Npulse: 500,  Nseg: 4096, Nrep: 24, maxdist: 200, temperature: 21,
+    desc: 'General use · desk objects · 20–200 cm · optimal 40–150 cm',
+  },
+  '2': {
+    f0: 8000, f1: 18000, Npulse: 256,  Nseg: 2048, Nrep: 24, maxdist: 100, temperature: 21,
+    desc: 'Close range · small/fast movements · 15–100 cm · optimal 20–60 cm',
+  },
+  '3': {
+    f0: 4000, f1: 8000,  Npulse: 1024, Nseg: 4096, Nrep: 12, maxdist: 350, temperature: 21,
+    desc: 'Long range · across a room · 20–350 cm · optimal 100–300 cm',
+  },
+  '4': {
+    f0: 6000, f1: 12000, Npulse: 1024, Nseg: 4096, Nrep: 24, maxdist: 200, temperature: 21,
+    desc: 'High SNR · noisy environments · 20–200 cm · optimal 50–180 cm',
+  },
+};
+
+/**
+ * Load a preset into all parameter controls.
+ * Reuses applyCalibration() so fields flash amber on change.
+ */
+function selectPreset(presetId) {
+  const descEl = document.getElementById('presetDesc');
+  if (!presetId) {
+    descEl.textContent = 'Manual parameter entry';
+    return;
+  }
+  const p = PRESETS[presetId];
+  if (!p) return;
+  applyCalibration(p);
+  descEl.textContent = p.desc;
+}
+
+// Reset preset dropdown to CUSTOM when the user edits any param manually
+(function wirePresetReset() {
+  const paramIds = ['paramF0','paramF1','paramNpulse','paramNseg','paramNrep','paramMaxdist','paramTemp'];
+  for (const id of paramIds) {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', () => {
+      document.getElementById('presetSelect').value = '';
+      document.getElementById('presetDesc').textContent = 'Manual parameter entry';
+    });
+  }
+})();
+
 
 const socket = io();
 let isRunning = false;

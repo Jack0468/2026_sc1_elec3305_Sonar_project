@@ -94,6 +94,21 @@
       </div>
       <div class="controls-body">
 
+        <!-- Preset selector -->
+        <div class="preset-row">
+          <div class="preset-select-wrap">
+            <label for="presetSelect">PRESET</label>
+            <select id="presetSelect" onchange="selectPreset(this.value)">
+              <option value="">── CUSTOM ──</option>
+              <option value="1">SET 1 — GENERAL USE</option>
+              <option value="2">SET 2 — CLOSE RANGE</option>
+              <option value="3">SET 3 — LONG RANGE</option>
+              <option value="4">SET 4 — HIGH SNR</option>
+            </select>
+          </div>
+          <div class="preset-desc" id="presetDesc">Manual parameter entry</div>
+        </div>
+
         <!-- Parameter grid -->
         <div class="param-grid">
           <div class="param-group">

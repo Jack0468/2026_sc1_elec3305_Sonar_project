@@ -334,6 +334,69 @@ body {
   box-shadow: 0 0 6px var(--green-glow);
 }
 
+/* ── Preset Selector ────────────────────────────────────────────────── */
+.preset-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 0.1rem;
+}
+
+.preset-select-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.preset-select-wrap label {
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: var(--green-dim);
+  text-transform: uppercase;
+  white-space: nowrap;
+  min-width: 50px;
+}
+
+.preset-select-wrap select {
+  flex: 1;
+  background: #070907;
+  border: 1px solid var(--green-mid);
+  color: var(--green-bright);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.3rem 0.5rem;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.preset-select-wrap select:focus {
+  border-color: var(--green-bright);
+  box-shadow: 0 0 8px var(--green-glow);
+}
+
+.preset-select-wrap select option {
+  background: #0a0c0a;
+  color: var(--green-bright);
+}
+
+.preset-desc {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--amber);
+  letter-spacing: 0.08em;
+  font-style: italic;
+  opacity: 0.8;
+  padding-left: 2px;
+}
+
 /* ── Controls Panel ────────────────────────────────────────────── */
 .controls-panel .controls-body {
   padding: 0.6rem 1rem;
