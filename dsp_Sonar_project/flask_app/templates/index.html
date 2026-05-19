@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Real-Time Sonar Detection System — Military-grade acoustic sonar with waterfall display and matched filter output">
+  <title>SONAR SYSTEM // ELEC3305</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- ── SCANLINE OVERLAY ─────────────────────────────────── -->
+  <div class="scanline-overlay"></div>
+
+  <!-- ── TOP BAR ──────────────────────────────────────────── -->
+  <header id="topbar">
+    <div class="topbar-left">
+      <span class="sys-label">SYS</span>
+      <h1>SONAR DETECTION SYSTEM</h1>
+    </div>
+    <div class="topbar-center">
+      <span class="classification">// ELEC3305 — ACOUSTIC RANGING //</span>
+    </div>
+    <div class="topbar-right">
+      <span class="status-dot" id="statusDot"></span>
+      <span class="status-text" id="statusText">OFFLINE</span>
+      <span class="fps-counter" id="fpsCounter">0 FPS</span>
+    </div>
+  </header>
+
+  <!-- ── MAIN GRID ────────────────────────────────────────── -->
+  <main id="mainGrid">
+
+    <!-- LEFT: Waterfall -->
+    <section class="panel" id="waterfallPanel">
+      <div class="panel-header">
+        <span class="panel-label">WATERFALL // RANGE HISTORY</span>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="waterfallCanvas" width="600" height="400"></canvas>
+        <div class="axis-label axis-x">DISTANCE (cm)</div>
+        <div class="axis-label axis-y">TIME ↓</div>
+      </div>
+    </section>
+
+    <!-- RIGHT: Matched Filter -->
+    <section class="panel" id="matchedPanel">
+      <div class="panel-header">
+        <span class="panel-label">MATCHED FILTER // LIVE</span>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="matchedCanvas" width="600" height="400"></canvas>
+        <div class="axis-label axis-x">DISTANCE (cm)</div>
+        <div class="axis-label axis-y">AMPLITUDE</div>
+      </div>
+    </section>
+
+    <!-- BOTTOM LEFT: Distance Readout -->
+    <section class="panel readout-panel" id="readoutPanel">
+      <div class="panel-header">
+        <span class="panel-label">TARGET ACQUISITION</span>
+      </div>
+      <div class="readout-body">
+        <div class="readout-main">
+          <span class="readout-value" id="distReadout">---.-</span>
+          <span class="readout-unit">cm</span>
+        </div>
+        <div class="readout-sub">
+          <div class="readout-item">
+            <span class="readout-item-label">PEAK MAG</span>
+            <span class="readout-item-value" id="peakMag">0.000</span>
+          </div>
+          <div class="readout-item">
+            <span class="readout-item-label">MIC LEVEL</span>
+            <div class="mic-bar-wrap">
+              <div class="mic-bar" id="micBar"></div>
+            </div>
+          </div>
+          <div class="readout-item">
+            <span class="readout-item-label">FRAMES</span>
+            <span class="readout-item-value" id="frameCount">0</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM RIGHT: Controls -->
+    <section class="panel controls-panel" id="controlsPanel">
+      <div class="panel-header">
+        <span class="panel-label">SYSTEM CONTROLS</span>
+      </div>
+      <div class="controls-body">
+
+        <!-- Parameter grid -->
+        <div class="param-grid">
+          <div class="param-group">
+            <label for="paramF0">F0 (Hz)</label>
+            <input type="number" id="paramF0" value="6000" step="500">
+          </div>
+          <div class="param-group">
+            <label for="paramF1">F1 (Hz)</label>
+            <input type="number" id="paramF1" value="12000" step="500">
+          </div>
+          <div class="param-group">
+            <label for="paramNpulse">NPULSE</label>
+            <input type="number" id="paramNpulse" value="500" step="50">
+          </div>
+          <div class="param-group">
+            <label for="paramNseg">NSEG</label>
+            <input type="number" id="paramNseg" value="4096" step="1024">
+          </div>
+          <div class="param-group">
+            <label for="paramNrep">NREP</label>
+            <input type="number" id="paramNrep" value="24" step="4">
+          </div>
+          <div class="param-group">
+            <label for="paramMaxdist">MAX DIST (cm)</label>
+            <input type="number" id="paramMaxdist" value="200" step="25">
+          </div>
+          <div class="param-group">
+            <label for="paramTemp">TEMP (°C)</label>
+            <input type="number" id="paramTemp" value="21" step="1">
+          </div>
+          <div class="param-group">
+            <label for="deviceSelect">MIC DEVICE</label>
+            <select id="deviceSelect">
+              <option value="">DEFAULT</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="button-row">
+          <button class="btn btn-start" id="btnStart" onclick="startSonar()">
+            <span class="btn-icon">▶</span> ENGAGE
+          </button>
+          <button class="btn btn-stop" id="btnStop" onclick="stopSonar()" disabled>
+            <span class="btn-icon">■</span> DISENGAGE
+          </button>
+          <button class="btn btn-cal" id="btnCalibrate" onclick="runCalibration()">
+            <span class="btn-icon">⟳</span> CALIBRATE
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── STATUS BAR ───────────────────────────────────────── -->
+  <footer id="statusBar">
+    <span id="logLine">SYSTEM READY — AWAITING OPERATOR INPUT</span>
+  </footer>
+
+  <!-- ── SCRIPTS ──────────────────────────────────────────── -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="/static/js/sonar.js"></script>
+
+</body>
+</html>

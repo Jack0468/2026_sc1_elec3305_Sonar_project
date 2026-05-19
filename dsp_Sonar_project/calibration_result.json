@@ -1,0 +1,13 @@
+{
+  "fs": 48000.0,
+  "f0": 4000,
+  "f1": 8000,
+  "Npulse": 1024,
+  "Nseg": 4096,
+  "Nrep": 24,
+  "Nplot": 200,
+  "maxdist": 200,
+  "temperature": 21.0,
+  "input_device_index": null,
+  "calibration_score": 595.0176939204829
+}
