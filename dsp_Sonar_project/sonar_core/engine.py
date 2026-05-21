@@ -16,8 +16,12 @@ import sys
 
 import numpy as np
 import pyaudio
-import sounddevice as sd
+try:
+    import sounddevice as sd
+except (ImportError, OSError):
+    sd = None
 from scipy import interpolate
+from scipy import signal as sp_signal
 
 from sonar_core.dsp import (
     genChirpPulse,
@@ -26,6 +30,22 @@ from sonar_core.dsp import (
     findDelay,
     dist2time,
 )
+
+def ca_cfar_1d(x: np.ndarray, guard: int = 3, ref: int = 8, factor: float = 2.5) -> np.ndarray:
+    """
+    1D Cell-Averaging Constant False Alarm Rate (CA-CFAR) filter.
+    Vectorised implementation using convolution.
+    """
+    kernel = np.zeros(2 * (ref + guard) + 1, dtype=np.float32)
+    kernel[:ref] = 1.0
+    kernel[-ref:] = 1.0
+    
+    ref_sum = np.convolve(x, kernel, mode='same')
+    ref_count = np.convolve(np.ones_like(x, dtype=np.float32), kernel, mode='same')
+    
+    noise_est = ref_sum / np.maximum(ref_count, 1.0)
+    return np.where(x > factor * noise_est, x, 0.0)
+
 
 
 # ---------------------------------------------------------------------------
@@ -140,9 +160,10 @@ def _record_audio(Qin: queue.Queue, p: pyaudio.PyAudio,
 def _signal_process(Qin: queue.Queue, Qdata: queue.Queue,
                     pulse_a: np.ndarray, Nseg: int, Nplot: int,
                     fs: float, maxdist: float, temperature: float,
+                    bp_sos: np.ndarray,
                     stop_flag: threading.Event) -> None:
     """
-    Overlap‑and‑add matched filtering.
+    Overlap‑and‑add matched filtering with bandpass, clutter and noise suppression.
 
     Produces interpolated sonar frames of length *Nplot* and pushes
     them into *Qdata*.
@@ -159,12 +180,20 @@ def _signal_process(Qin: queue.Queue, Qdata: queue.Queue,
 
     maxsamp = min(int(dist2time(maxdist, temperature) * fs), Nseg)
 
+    # Initialize persistent state variables for filtering
+    bp_zi = sp_signal.sosfilt_zi(bp_sos) * 0.0
+    background = None
+    alpha = 0.90
+    frame_count = 0
+
     while not stop_flag.is_set():
         chunk = Qin.get()
-        if str(chunk) == "EOT":
+        if isinstance(chunk, str) and chunk == "EOT":
             break
 
-        Xchunk = crossCorr(chunk, pulse_a)   # length: len(chunk) + pulse_len - 1
+        # Apply bandpass filter with persistent state to avoid chunk boundary transients
+        chunk_filtered, bp_zi = sp_signal.sosfilt(bp_sos, chunk, zi=bp_zi)
+        Xchunk = crossCorr(chunk_filtered, pulse_a)   # length: len(chunk) + pulse_len - 1
         corr_len = len(chunk) + pulse_len - 1
 
         # Safety: if the buffer shape was corrupted by np.roll edge-cases,
@@ -187,12 +216,16 @@ def _signal_process(Qin: queue.Queue, Qdata: queue.Queue,
         cur_idx += len(chunk)
 
         if found_delay and cur_idx >= Nseg:
-            idx = findDelay(abs(Xrcv), Nseg)
-            Xrcv = np.roll(Xrcv, -idx)
-            # Guard: idx=0 → Xrcv[-0:] zeros the entire array
-            if 0 < idx < buf_size:
-                Xrcv[-idx:] = 0
-            cur_idx = max(cur_idx - idx, 0)
+            frame_count += 1
+            # Adjust delay/sync alignment every 60 frames instead of every frame to avoid jitter and gaps
+            if frame_count % 60 == 0:
+                idx = findDelay(abs(Xrcv), Nseg)
+                safe_correction = cur_idx - Nseg
+                if 10 < idx < safe_correction:
+                    Xrcv = np.roll(Xrcv, -idx)
+                    if 0 < idx < buf_size:
+                        Xrcv[-idx:] = 0
+                    cur_idx = max(cur_idx - idx, 0)
 
             # Crop, normalise, interpolate to Nplot output pixels
             seg = abs(Xrcv[:maxsamp].copy())
@@ -203,6 +236,23 @@ def _signal_process(Qin: queue.Queue, Qdata: queue.Queue,
             interp_fn = interpolate.interp1d(x_old, Xrcv_seg)
             x_new = np.linspace(0, maxsamp - 1, Nplot)
             Xrcv_seg = interp_fn(x_new)
+
+            # 1. CA-CFAR Clutter Suppression
+            Xrcv_seg = ca_cfar_1d(Xrcv_seg, guard=3, ref=8, factor=2.5)
+
+            # 2. Moving Target Indicator (MTI) clutter suppression via EMA
+            if background is None:
+                background = Xrcv_seg.copy()
+            else:
+                background = alpha * background + (1 - alpha) * Xrcv_seg
+            Xrcv_seg = np.maximum(Xrcv_seg - background, 0.0)
+
+            # 3. 3-tap range smoothing
+            smooth_kernel = np.array([0.25, 0.5, 0.25], dtype=np.float32)
+            Xrcv_seg = np.convolve(Xrcv_seg, smooth_kernel, mode='same')
+
+            # 4. Soft noise floor subtraction
+            Xrcv_seg = np.maximum(Xrcv_seg - 0.08, 0.0) / 0.92
 
             # Remove the processed segment
             Xrcv = np.roll(Xrcv, -Nseg)
@@ -292,12 +342,23 @@ class SonarEngine:
         self.output_device_index = output_device_index
         self.mic_level_callback = mic_level_callback
 
-        # Build the chirp pulse and pulse train
-        self._pulse_a = genChirpPulse(self.Npulse, self.f0, self.f1, self.fs)
-        han = np.hanning(self.Npulse).reshape(self.Npulse, 1)
-        self._pulse_a = np.multiply(self._pulse_a, han)
-        pulse_real = np.real(self._pulse_a)
-        self._ptrain = genPulseTrain(pulse_real, self.Nrep, self.Nseg)
+        # Build the chirp pulse and pulse train using mismatched filter design
+        # Transmit: Unwindowed real LFM chirp (maximum energy on air)
+        pulse_tx = np.real(genChirpPulse(self.Npulse, self.f0, self.f1, self.fs))
+        self._ptrain = genPulseTrain(pulse_tx, self.Nrep, self.Nseg)
+
+        # Receive: Chebyshev-windowed LFM template (max sidelobe suppression, e.g. 40 dB)
+        cheb_win = sp_signal.windows.chebwin(self.Npulse, at=40).reshape(self.Npulse, 1)
+        self._pulse_a = np.multiply(genChirpPulse(self.Npulse, self.f0, self.f1, self.fs), cheb_win)
+
+        # Precompute bandpass filter coefficients (order-independent)
+        f_lo = min(self.f0, self.f1)
+        f_hi = max(self.f0, self.f1)
+        bp_low = max(f_lo * 0.85, 100.0)
+        nyq_cap = self.fs / 2 * 0.95
+        bp_high = min(f_hi * 1.15, nyq_cap)
+        bp_high = max(bp_high, bp_low + 200.0)
+        self._bp_sos = sp_signal.butter(4, [bp_low, bp_high], btype='bandpass', fs=self.fs, output='sos')
 
         # Internal queues
         self._Qin: queue.Queue = queue.Queue()
@@ -338,7 +399,7 @@ class SonarEngine:
                 target=_signal_process,
                 args=(self._Qin, self._Qdata, self._pulse_a,
                       self.Nseg, self.Nplot, self.fs,
-                      self.maxdist, self.temperature, self._stop_flag),
+                      self.maxdist, self.temperature, self._bp_sos, self._stop_flag),
             ),
         ]
         for t in self._threads:

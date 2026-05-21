@@ -1,5 +1,5 @@
-# FOR JACK:
+# Todo List
 
-This now plays audio well. The @contextScopeItemMentionplays and receives audio now, but the waterfall plot of the ipnyb SONAR app only displays one pixel. 
-
-From a friend, by reducing the Nseg of the ipynb file, we see the effect we are looking for and not the single pixel. I don't know if this is correct 
+All previous items have been resolved:
+- [x] Fixed audio playback and recording issues.
+- [x] Fixed waterfall plot displaying only a single pixel by optimizing `Nseg` and visual scaling.

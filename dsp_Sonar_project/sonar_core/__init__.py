@@ -12,7 +12,10 @@ from sonar_core.dsp import (
     dist2time,
     time2dist,
 )
-from sonar_core.engine import SonarEngine
+try:
+    from sonar_core.engine import SonarEngine
+except (ImportError, OSError):
+    SonarEngine = None
 
 __all__ = [
     "genChirpPulse",
